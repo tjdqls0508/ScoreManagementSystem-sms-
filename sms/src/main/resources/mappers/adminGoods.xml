@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.goods">
+	
+	<select id="selectNewGoodsList" resultType="GoodsDto" >
+		SELECT 
+	   			*
+	    FROM 
+				T_SHOPPING_GOODS 	            		
+        ORDER BY 
+          		GOODS_CREDATE DESC
+	</select>
+	
+	<insert id="insertNewGoods" parameterType="GoodsDto">
+		    INSERT INTO 
+		  			T_SHOPPING_GOODS (
+						GOODS_TITLE,
+					    GOODS_SINGER,
+						GOODS_PRICE,
+						GOODS_COMPOSER,
+						GOODS_GENRE,
+						GOODS_POINT,
+						GOODS_UPLOAD_DATE ,
+						GOODS_TOTAL_PAGE,
+						GOODS_DELIVERY_PRICE,
+						GOODS_DELIVERY_DATE,
+						GOODS_STATUS,
+						GOODS_FILE_NAME,
+						GOODS_CREDATE, 	
+						GOODS_HITS			  			
+		  			)
+		    VALUES (
+			       #{goodsTitle},
+			       #{goodsSinger},
+			       #{goodsPrice},
+			       #{goodsComposer},
+			       #{goodsGenre},
+			       #{goodsPoint},
+			       #{goodsUploadDate},
+			       #{goodsTotalPage},
+			       #{goodsDeliveryPrice},
+			       #{goodsDeliveryDate},
+			       #{goodsStatus},
+			       #{goodsFileName},
+			       NOW(),
+			       0
+ 			 )
+	</insert> 
+	
+	<select id="selectGoodsDetail" parameterType="int" resultType="GoodsDto">
+	    SELECT 
+	    		*
+	    FROM 
+	    		T_SHOPPING_GOODS  
+        WHERE 
+        		GOODS_ID = #{goodsId}
+	</select>
+	
+	<update id="updateGoodsInfo" parameterType="hashmap" >
+	   UPDATE 
+	   			T_SHOPPING_GOODS
+	   <set> 
+	      <if test='goodsGenre!= null and goodsGenre != ""'>
+	        GOODS_GENRE = #{goodsGenre},
+	      </if>
+	      <if test='goodsTitle != null and goodsTitle != ""'>
+	        GOODS_TITLE = #{goodsTitle},
+	      </if>
+	      <if test='goodsWriter != null and goodsWriter != ""'>
+	        GOODS_SINGER = #{goodsSinger},
+	      </if>
+	      <if test='goodsComposer != null and goodsComposer != ""'>
+	        GOODS_COMPOSER = #{goodsComposer},
+	      </if>
+	      <if test='goodsPrice != null and goodsPrice != ""'>
+	        GOODS_PRICE = #{goodsPrice},
+	      </if>
+	      <if test='goodsUploadDate != null and goodsUploadDate != ""'>
+	        GOODS_PUBLISHED_DATE = #{goodsUploadDate},
+	      </if>
+	      <if test='goodsPoint != null and goodsPoint != ""'>
+	        GOODS_POINT = #{goodsPoint},
+	      </if>
+	      <if test='goodsTotalPage != null and goodsTotalPage != ""'>
+	        GOODS_TOTAL_PAGE = #{goodsTotalPage},
+	      </if>
+	      <if test='goodsDeliveryPrice != null and goodsDeliveryPrice != ""'>
+	        GOODS_DELIVERY_PRICE = #{goodsDeliveryPrice},
+	      </if>
+	      <if test='goodsDeliveryDate != null and goodsDeliveryDate != ""'>
+	        GOODS_DELIVERY_DATE = #{goodsDeliveryDate},
+	      </if>
+	      <if test='goodsStatus != null and goodsStatus != ""'>
+	        GOODS_STATUS = #{goodsStatus},
+	      </if>
+	      <if test='goodsFileName != null and goodsFileName != ""'>
+	        GOODS_FILE_NAME = #{goodsFileName},
+      	  </if>
+	    </set>
+		WHERE 
+				GOODS_ID = #{goodsId}
+	</update>	
+		
+</mapper>

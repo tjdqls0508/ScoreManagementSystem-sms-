@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.board">
+	
+	<!-- 게시글의 내용을 반환하는 쿼리 -->
+	<select id="getSearchBoard" parameterType="hashmap" resultType="BoardDto">
+		<choose>
+			<when test="searchKeyword.equals('total')">	<!-- 전체 검색일 경우 -->
+				<choose>
+					<when test="searchWord.equals('')">	<!-- 전체 검색중 검색 문자가 없을 경우 -->
+						SELECT
+								*
+						FROM
+								T_SHOPPING_BOARD
+						ORDER BY
+								REF DESC,
+								RE_STEP 
+						LIMIT 
+								#{startBoardIdx} , #{onePageViewCount}
+					</when>
+					<otherwise>	<!-- 전체 검색중 검색 문자가 있을 경우 -->
+						SELECT 
+								*
+						FROM
+								T_SHOPPING_BOARD
+						WHERE
+								BOARD_SUBJECT LIKE CONCAT('%' , #{searchWord} , '%') OR
+								MEMBER_ID LIKE CONCAT('%' , #{searchWord} , '%')
+						ORDER BY
+								REF DESC,
+								RE_STEP  
+						LIMIT 
+								#{startBoardIdx},#{onePageViewCount}
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>	<!-- 서치 키워드를 이용하여 검색하는 경우 -->
+				SELECT
+						*
+				FROM
+						T_SHOPPING_BOARD
+				WHERE
+					<if test="searchKeyword.equals('memberId')">
+						MEMBER_ID LIKE CONCAT('%' , #{searchWord} , '%')
+					</if>
+					<if test="searchKeyword.equals('boardSubject')">
+						BOARD_SUBJECT LIKE CONCAT('%' , #{searchWord} , '%')
+					</if>
+				ORDER BY
+						REF DESC,
+						RE_STEP 
+				LIMIT
+						#{startBoardIdx} , #{onePageViewCount}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectOneBoard" parameterType="int" resultType="BoardDto">
+		SELECT
+				*
+		FROM
+				T_SHOPPING_BOARD
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</select>
+	
+	<update id="increaseReadCount" parameterType="int">
+		UPDATE
+				T_SHOPPING_BOARD
+		SET
+				READ_COUNT = READ_COUNT + 1
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</update>
+	
+	<insert id="addNewBoard" parameterType="BoardDto">
+		INSERT INTO 
+				T_SHOPPING_BOARD
+		VALUE(
+				(SELECT 
+						IFNULL(MAX(BOARD_NUM) + 1 , 1)
+				FROM 
+						T_SHOPPING_BOARD AS B),
+				#{memberId},
+				#{boardSubject},
+				NOW(),
+				(SELECT 
+						IFNULL(MAX(REF) + 1 , 1) 
+				FROM 
+						T_SHOPPING_BOARD AS B),
+				1,
+				1,
+				0,
+				#{boardContent},
+				#{goodsTitle}
+		)
+	</insert>
+	
+	<!-- 댓글을 등록하는 쿼리 -->
+	<insert id="insertReplyBoard" parameterType="BoardDto">
+		INSERT INTO 
+				T_SHOPPING_BOARD
+		VALUES (
+				(SELECT 
+					MAX(BOARD_NUM) + 1 
+				FROM 
+					T_SHOPPING_BOARD AS B),
+			    #{memberId},
+			    #{boardSubject},
+			    NOW(),
+			    #{ref},
+			    #{reStep} + 1,
+			    #{reLevel} + 1,
+			    0,
+			    #{boardContent},
+				#{goodsTitle}
+			)
+	</insert>
+	
+	<update id="updateBoard" parameterType="BoardDto">
+		UPDATE
+				T_SHOPPING_BOARD
+		SET
+				BOARD_SUBJECT = #{boardSubject},
+				BOARD_CONTENT = #{boardContent},
+				GOODS_TITLE   = #{goodsTitle}
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</update>
+	<delete id="removeBoard" parameterType="int">
+		DELETE FROM
+				T_SHOPPING_BOARD
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</delete>
+	
+	<!-- 게시글의 개수를 반환하는 쿼리 -->
+	<select id="getAllBoardCount" parameterType="hashmap" resultType="int">
+		<choose>
+			<when test="searchKeyword.equals('total')"> <!-- searchKeyword가 전체검색일 경우 -->
+				<choose>
+					<when test="searchWord.equals('')"> <!--  특정 키워드가 없을경우 (보통의 경우)  -->
+						SELECT 
+								COUNT(*) 
+						FROM 
+								T_SHOPPING_BOARD
+					</when>
+					<otherwise>	<!-- 특정 키워드가 있을 경우 -->
+						SELECT 
+								COUNT(*) 
+						FROM 
+								T_SHOPPING_BOARD
+						WHERE
+								BOARD_SUBJECT  LIKE CONCAT('%',#{searchWord},'%') OR 
+								MEMBER_ID	   LIKE CONCAT('%',#{searchWord},'%')
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>	<!-- searchKeyword가 전체 검색이 아닐 경우 -->
+				SELECT 
+						COUNT(*) 
+				FROM 
+						T_SHOPPING_BOARD
+				WHERE
+					<if test="searchKeyword.equals('memberId')">
+						MEMBER_ID LIKE CONCAT('%' , #{searchWord} , '%')
+					</if>
+					<if test="searchKeyword.equals('boardSubject')">
+						BOARD_SUBJECT LIKE CONCAT('%' , #{searchWord} , '%')
+					</if>
+			</otherwise>
+		</choose>	
+	</select>
+	
+	<!-- 스탭을 옮려주는 쿼리 -->
+	<update id="updateBoardReplyStep"  parameterType="BoardDto">
+		<![CDATA[
+			UPDATE 
+					T_SHOPPING_BOARD
+			SET 
+					RE_STEP = RE_STEP + 1
+			WHERE 
+					REF = #{ref} AND RE_STEP > #{reStep}
+		]]>
+	</update>
+	
+	
+	
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="/goods/goodsDetail" extends="baseLayout">
+		<put-attribute name="title" value="상품 상세 페이지" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/goods/goodsDetail.jsp" />
+	</definition>
+	<definition name="/goods/goodsStatus" extends="baseLayout">
+		<put-attribute name="title" value="종류별 악보" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/goods/goodsStatus.jsp" />
+	</definition>
+	<definition name="/goods/goodsGenre" extends="baseLayout">
+		<put-attribute name="title" value="장르별 악보" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/goods/goodsGenreMain.jsp" />
+	</definition>
+	<definition name="/goods/genreDetail" extends="baseLayout">
+		<put-attribute name="title" value="장르별 상세" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/goods/goodsGenreDetail.jsp" />
+	</definition>
+
+</tiles-definitions>
+
+

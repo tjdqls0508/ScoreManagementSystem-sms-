@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="/board/main" extends="baseLayout">
+		<put-attribute name="title" value="구매 후기 페이지" />
+		<put-attribute name="body"  value="/WEB-INF/views/board/boardMain.jsp" />
+	</definition>
+	<definition name="/board/write" extends="baseLayout">
+		<put-attribute name="title" value="후기 작성" />
+		<put-attribute name="body"  value="/WEB-INF/views/board/writeForm.jsp" />
+	</definition>
+	<definition name="/board/info" extends="baseLayout">
+		<put-attribute name="title" value="후기 상세" />
+		<put-attribute name="body"  value="/WEB-INF/views/board/boardInfo.jsp" />
+	</definition>
+	<definition name="/board/modifyBoard" extends="baseLayout">
+		<put-attribute name="title" value="후기 수정" />
+		<put-attribute name="body"  value="/WEB-INF/views/board/updateForm.jsp" />
+	</definition>
+	<definition name="/board/boardReply" extends="baseLayout">
+		<put-attribute name="title" value="답글 작성" />
+		<put-attribute name="body"  value="/WEB-INF/views/board/boardReply.jsp" />
+	</definition>
+
+</tiles-definitions>
+
+

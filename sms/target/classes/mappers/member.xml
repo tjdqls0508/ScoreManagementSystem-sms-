@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member">
+
+	<select id="login" resultType="MemberDto" parameterType="hashmap">
+		SELECT
+				*
+		FROM
+				T_SHOPPING_MEMBER
+		WHERE
+				MEMBER_ID = #{memberId}
+	</select>
+
+	<select id="selectOverlappedId" parameterType="String" resultType="int">
+		SELECT
+				COUNT(*)
+		FROM
+				T_SHOPPING_MEMBER
+		WHERE
+				MEMBER_ID = #{id}
+	</select>
+
+	<insert id="insertNewMember" parameterType="memberDto">
+		INSERT INTO
+				T_SHOPPING_MEMBER
+		VALUES (
+				#{memberId},
+				#{memberPw},
+				#{memberName},
+				#{memberGender},
+				#{memberBirthY},
+				#{memberBirthM},
+				#{memberBirthD},
+				#{memberBirthGn},
+				#{hp1},
+				#{hp2},
+				#{hp3},
+				#{smsstsYn},
+				#{email1},
+				#{email2},
+				#{emailstsYn},
+				#{zipcode},
+				#{roadAddress},
+				#{jibunAddress},
+				#{namujiAddress},
+				NOW()
+		)
+	</insert>
+
+</mapper>

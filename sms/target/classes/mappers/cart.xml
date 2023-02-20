@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.cart">
+
+     <select id="getCartList" parameterType="String" resultMap="selectMapList"   >
+		SELECT 
+   				C.CART_ID,
+   				C.MEMBER_ID,
+   				C.GOODS_ID,
+   				C.GOODS_COUNT,
+   				G.GOODS_TITLE,
+   				G.GOODS_SINGER,
+   				G.GOODS_COMPOSER,
+   				G.GOODS_PRICE,
+   				G.GOODS_FILE_NAME
+   		FROM 
+   								T_SHOPPING_CART C
+   				LEFT OUTER JOIN T_SHOPPING_GOODS G
+   						   ON C.GOODS_ID = G.GOODS_ID
+   		WHERE
+   				MEMBER_ID = #{memberId}  
+	</select>
+	
+	<resultMap type="map" id="selectMapList">
+		<result column="CART_ID" property="cartId"/>
+		<result column="MEMBER_ID" property="memberId"/>
+		<result column="GOODS_ID" property="goodsId"/>
+		<result column="GOODS_COUNT" property="goodsCount"/>
+		<result column="GOODS_TITLE" property="goodsTitle"/>
+		<result column="GOODS_SINGER" property="goodsSinger"/>
+		<result column="GOODS_COMPOSER" property="goodsComposer"/>
+		<result column="GOODS_PRICE" property="goodsPrice"/>
+		<result column="GOODS_FILE_NAME" property="goodsFileName"/>
+	</resultMap>
+	
+     <insert id="addNewCart" parameterType="CartDto">
+		INSERT INTO T_SHOPPING_CART(
+				MEMBER_ID,
+				GOODS_ID,
+				GOODS_COUNT
+		)
+		VALUES(
+				#{memberId},
+				#{goodsId},
+				#{goodsCount}
+		)
+		
+	</insert>
+   <delete id="deleteOneCart" parameterType="int">
+   		DELETE	FROM
+   				T_SHOPPING_CART
+   		WHERE
+   				CART_ID = #{cartId}
+   </delete>
+   <select id="checkCart" parameterType="CartDto" resultType="CartDto">
+   		SELECT
+   				*
+   		FROM
+   				T_SHOPPING_CART
+   		WHERE
+   				MEMBER_ID = #{memberId} AND GOODS_ID = #{goodsId}
+   </select>
+   
+   <update id="updateGoodsCount" parameterType="CartDto">
+   		UPDATE 
+   				T_SHOPPING_CART 
+   		SET
+   				GOODS_COUNT = #{goodsCount}
+   		WHERE
+   				CART_ID = #{cartId}
+   </update>
+	
+</mapper>
